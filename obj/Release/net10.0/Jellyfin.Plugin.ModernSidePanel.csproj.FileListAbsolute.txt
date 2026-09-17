@@ -1,0 +1,12 @@
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\bin\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.deps.json
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\bin\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.dll
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\bin\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.pdb
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.csproj.AssemblyReference.cache
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.GeneratedMSBuildEditorConfig.editorconfig
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.AssemblyInfoInputs.cache
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.AssemblyInfo.cs
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.csproj.CoreCompileInputs.cache
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.dll
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\refint\Jellyfin.Plugin.ModernSidePanel.dll
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\Jellyfin.Plugin.ModernSidePanel.pdb
+A:\scripts\jellyfin-plugin-modern-ui-side-panel\obj\Release\net10.0\ref\Jellyfin.Plugin.ModernSidePanel.dll

@@ -1,0 +1,309 @@
+/* ModernSidePanel — keeps modern Jellyfin styling, restores persistent legacy side panel, hides top bar.
+ * Served from the plugin DLL at /Plugins/ModernSidePanel/sidepanel.css
+ * Config is injected via /Plugins/ModernSidePanel/config.js -> window.ModernSidePanelConfig
+ * and mirrored as CSS variables on :root by sidepanel.js.
+ */
+
+:root {
+  --msp-width: 272px;
+  --msp-blur: 18px;
+  /* Fallbacks that track the modern Jellyfin theme when available */
+  --msp-accent: var(--theme-primary-color, var(--accent, #00a4dc));
+  --msp-radius: 12px;
+}
+
+/* ============ TOP BAR REMOVAL (desktop only, applied via .msp-hide-topbar on <html>) ============ */
+/* Legacy shell (<=10.10) + Modern v12 MUI shell (AppHeader/MuiAppBar/ResponsiveDrawer) */
+
+html.msp-hide-topbar:not(.msp-mobile) .skinHeader,
+html.msp-hide-topbar:not(.msp-mobile) .skinHeader-withBackground,
+html.msp-hide-topbar:not(.msp-mobile) .skinHeader.semiTransparent,
+html.msp-hide-topbar:not(.msp-mobile) header.MuiAppBar-root,
+html.msp-hide-topbar:not(.msp-mobile) .MuiAppBar-root[data-msp="app-header"],
+html.msp-hide-topbar:not(.msp-mobile) [data-testid="app-header"],
+html.msp-hide-topbar:not(.msp-mobile) .msp-modern-header {
+  display: none !important;
+}
+
+html.msp-hide-topbar:not(.msp-mobile) .headerTop,
+html.msp-hide-topbar:not(.msp-mobile) .headerTabs,
+html.msp-hide-topbar:not(.msp-mobile) .sectionTabs {
+  display: none !important;
+}
+
+/* The page content normally pads for the header — reclaim that space */
+html.msp-hide-topbar:not(.msp-mobile) .withSectionTabs .content-primary,
+html.msp-hide-topbar:not(.msp-mobile) .withSectionTabs .pageBody,
+html.msp-hide-topbar:not(.msp-mobile) .libraryPage.withSectionTabs {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* ============ PERSISTENT SIDEBAR (desktop) ============ */
+
+html.msp-sidebar:not(.msp-mobile) body {
+  overflow-x: hidden;
+}
+
+/* Force the stock drawer to behave as a fixed sidebar */
+html.msp-sidebar:not(.msp-mobile) .mainDrawer {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: var(--msp-width) !important;
+  min-width: var(--msp-width) !important;
+  max-width: var(--msp-width) !important;
+  transform: none !important;
+  translate: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+  flex-direction: column;
+  z-index: 1099 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 16px !important;
+  /* Keep the modern glass look — theme-aware with graceful fallback */
+  background: var(--msp-drawer-bg, rgba(16, 20, 28, 0.82)) !important;
+  backdrop-filter: blur(var(--msp-blur)) saturate(1.25);
+  -webkit-backdrop-filter: blur(var(--msp-blur)) saturate(1.25);
+  box-shadow: 14px 0 32px rgba(0, 0, 0, 0.35);
+  transition: none !important;
+}
+
+/* Never show the overlay scrim on desktop — the sidebar is part of layout */
+html.msp-sidebar:not(.msp-mobile) .tmla-mask,
+html.msp-sidebar:not(.msp-mobile) .touch-menu-la {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide the hamburger on desktop (sidebar is always visible) */
+html.msp-sidebar:not(.msp-mobile) .mainDrawerButton {
+  display: none !important;
+}
+
+/* Shift the main content to make room for the sidebar */
+html.msp-sidebar:not(.msp-mobile) .mainAnimatedPages,
+html.msp-sidebar:not(.msp-mobile) .mainAnimatedPage,
+html.msp-sidebar:not(.msp-mobile) .skinBody {
+  margin-left: var(--msp-width) !important;
+  width: calc(100% - var(--msp-width)) !important;
+  max-width: calc(100% - var(--msp-width)) !important;
+}
+
+/* Dashboard / admin pages use a slightly different wrapper */
+html.msp-sidebar:not(.msp-mobile) .dashboardDocument .mainAnimatedPages,
+html.msp-sidebar:not(.msp-mobile) .dashboardDocument .content-primary {
+  margin-left: var(--msp-width) !important;
+}
+
+/* Fullscreen video / now-playing overlays must cover the sidebar */
+html.msp-sidebar .videoOsdBottom,
+html.msp-sidebar .osdParent,
+html.msp-sidebar .dialogContainer,
+html.msp-sidebar .videoPlayerContainer,
+html.msp-sidebar.fullscreenVideo .mainDrawer,
+html.msp-sidebar.fullscreenVideo #msp-sidepanel {
+  z-index: 9999;
+}
+html.msp-sidebar.fullscreenVideo .mainDrawer,
+html.msp-sidebar.fullscreenVideo #msp-sidepanel {
+  display: none !important;
+}
+html.msp-sidebar.fullscreenVideo .mainAnimatedPages,
+html.msp-sidebar.fullscreenVideo .skinBody {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ============ MODERN STYLING FOR DRAWER CONTENTS (all viewports) ============ */
+
+.mainDrawer .navDrawerContent,
+#msp-sidepanel .msp-nav {
+  padding: 12px 12px 16px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.mainDrawer .navDrawerContent::-webkit-scrollbar,
+#msp-sidepanel .msp-nav::-webkit-scrollbar {
+  width: 8px;
+}
+.mainDrawer .navDrawerContent::-webkit-scrollbar-thumb,
+#msp-sidepanel .msp-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+}
+
+/* Logo block injected at the top of the drawer */
+.msp-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 12px 12px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  user-select: none;
+}
+.msp-logo .msp-logo-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: #fff;
+  background: linear-gradient(135deg, #00a4dc, #7b2ff7);
+  box-shadow: 0 4px 14px rgba(0, 164, 220, 0.35);
+  flex: 0 0 auto;
+}
+.msp-logo small {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+/* Drawer links — modern pill rows */
+.mainDrawer .navDrawerMenuOption,
+.mainDrawer .emby-button.navDrawerMenuOption,
+#msp-sidepanel .msp-link {
+  border-radius: var(--msp-radius) !important;
+  margin: 1px 0 !important;
+  padding: 9px 12px !important;
+  font-size: 14px !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  opacity: 0.92;
+  text-decoration: none !important;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.mainDrawer .navDrawerMenuOption:hover,
+#msp-sidepanel .msp-link:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  transform: translateX(1px);
+}
+
+.mainDrawer .navDrawerMenuOption.selected,
+.mainDrawer .navDrawerMenuOption.emby-button-active,
+#msp-sidepanel .msp-link.active {
+  background: rgba(0, 164, 220, 0.18) !important;
+  border-color: rgba(0, 164, 220, 0.35) !important;
+  background: color-mix(in srgb, var(--msp-accent) 18%, transparent) !important;
+  border-color: color-mix(in srgb, var(--msp-accent) 35%, transparent) !important;
+  opacity: 1;
+}
+
+.mainDrawer .navDrawerMenuOption .material-icons,
+#msp-sidepanel .msp-link .material-icons {
+  font-size: 21px;
+  opacity: 0.9;
+}
+
+/* Section headers inside the drawer */
+.mainDrawer .drawerSectionText,
+.mainDrawer .navDrawerCollapseSectionHeader,
+#msp-sidepanel .msp-section {
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.55;
+  padding: 14px 12px 6px !important;
+  margin: 0 !important;
+}
+
+/* Relocated header actions (search / user / cast) pinned near the bottom */
+.msp-actions {
+  margin-top: auto !important;
+  padding: 10px 4px 2px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.msp-actions .emby-button,
+.msp-actions button {
+  border-radius: 10px !important;
+}
+.msp-actions .headerSearchButton,
+.msp-actions .headerUserButton {
+  display: inline-flex !important;
+}
+
+/* ============ CUSTOM FALLBACK SIDEBAR (only if stock .mainDrawer is gone in v12) ============ */
+
+#msp-sidepanel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--msp-width);
+  z-index: 1099;
+  display: none;
+  flex-direction: column;
+  background: rgba(16, 20, 28, 0.82);
+  backdrop-filter: blur(var(--msp-blur)) saturate(1.25);
+  -webkit-backdrop-filter: blur(var(--msp-blur)) saturate(1.25);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 14px 0 32px rgba(0, 0, 0, 0.35);
+}
+
+html.msp-use-custom:not(.msp-mobile) #msp-sidepanel {
+  display: flex !important;
+}
+html.msp-use-custom:not(.msp-mobile) .mainAnimatedPages,
+html.msp-use-custom:not(.msp-mobile) .skinBody,
+html.msp-use-custom:not(.msp-mobile) main.MuiBox-root,
+html.msp-use-custom:not(.msp-mobile) [data-testid="app-body"] {
+  margin-left: var(--msp-width) !important;
+}
+
+/* ============ MODERN v12 MUI SHELL: force temporary drawer -> permanent sidebar ============ */
+
+html.msp-sidebar:not(.msp-mobile) .MuiDrawer-root.MuiDrawer-docked,
+html.msp-sidebar:not(.msp-mobile) div[class*="MuiDrawer-paper"] {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: var(--msp-width) !important;
+  transform: none !important;
+  visibility: visible !important;
+  transition: none !important;
+}
+
+/* ============ MOBILE FALLBACK: restore stock behaviour ============ */
+
+html.msp-mobile .skinHeader {
+  display: flex !important;
+}
+html.msp-mobile .mainDrawer {
+  /* Let Jellyfin's own drawer logic own positioning on small screens */
+  width: min(85vw, 320px) !important;
+}
+html.msp-mobile .mainAnimatedPages,
+html.msp-mobile .skinBody,
+html.msp-mobile .dashboardDocument .mainAnimatedPages {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+html.msp-mobile #msp-sidepanel {
+  display: none !important;
+}

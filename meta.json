@@ -1,0 +1,14 @@
+{
+  "guid": "9f7a2ad0-5e4e-4b2c-9c3a-1d2f6e7a8b9c1",
+  "name": "Modern UI Side Panel",
+  "description": "Keeps the modern Jellyfin UI style, restores a persistent legacy left side panel, and hides the top bar header.",
+  "overview": "Persistent classic sidebar + hidden top bar, modern glass styling. Desktop only; mobile keeps stock behaviour.",
+  "owner": "Jellyfin Contributors",
+  "category": "General",
+  "version": "1.0.0",
+  "targetAbi": "12.0.0.0",
+  "downloads": 0,
+  "checksum": "",
+  "sourceUrl": "https://github.com/jellyfin/jellyfin-plugin-modern-ui-side-panel",
+  "timeout": 0
+}

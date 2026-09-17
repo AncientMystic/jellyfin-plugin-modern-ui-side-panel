@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Modern UI Side Panel</title>
+</head>
+<body>
+    <div id="ModernSidePanelConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <h2>Modern UI Side Panel</h2>
+                <p>Keeps the modern Jellyfin styling, restores a persistent legacy-style left side panel, and hides the top bar header on desktop. Mobile keeps stock behaviour.</p>
+
+                <form id="ModernSidePanelConfigForm">
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label class="emby-checkbox-label">
+                            <input id="EnablePlugin" type="checkbox" is="emby-checkbox" />
+                            <span>Enable plugin (inject sidebar)</span>
+                        </label>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label class="emby-checkbox-label">
+                            <input id="HideTopBar" type="checkbox" is="emby-checkbox" />
+                            <span>Hide top bar header on desktop</span>
+                        </label>
+                        <div class="fieldDescription">Hides .skinHeader / .headerTop. Search &amp; user buttons are moved into the sidebar.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label class="emby-checkbox-label">
+                            <input id="PersistentSidebar" type="checkbox" is="emby-checkbox" />
+                            <span>Persistent sidebar on desktop</span>
+                        </label>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label class="emby-checkbox-label">
+                            <input id="ShowLogo" type="checkbox" is="emby-checkbox" />
+                            <span>Show logo at top of sidebar</span>
+                        </label>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label class="emby-checkbox-label">
+                            <input id="RelocateHeaderButtons" type="checkbox" is="emby-checkbox" />
+                            <span>Move search / user buttons into sidebar</span>
+                        </label>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="SidebarWidth">Sidebar width (px, 200-400)</label>
+                        <input id="SidebarWidth" type="number" is="emby-input" min="200" max="400" />
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="MobileBreakpoint">Mobile breakpoint (px)</label>
+                        <input id="MobileBreakpoint" type="number" is="emby-input" min="480" max="1200" />
+                        <div class="fieldDescription">Below this width the top bar is restored and the sidebar becomes an overlay drawer.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="BlurStrength">Sidebar blur (px, 0-30)</label>
+                        <input id="BlurStrength" type="number" is="emby-input" min="0" max="30" />
+                    </div>
+
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var ModernSidePanelConfig = { PluginId: '9f7a2ad0-5e4e-4b2c-9c3a-1d2f6e7a8b9c1' };
+
+            document.querySelector('#ModernSidePanelConfigPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(ModernSidePanelConfig.PluginId).then(function (config) {
+                    document.querySelector('#EnablePlugin').checked = config.EnablePlugin !== false;
+                    document.querySelector('#HideTopBar').checked = config.HideTopBar !== false;
+                    document.querySelector('#PersistentSidebar').checked = config.PersistentSidebar !== false;
+                    document.querySelector('#ShowLogo').checked = config.ShowLogo !== false;
+                    document.querySelector('#RelocateHeaderButtons').checked = config.RelocateHeaderButtons !== false;
+                    document.querySelector('#SidebarWidth').value = config.SidebarWidth || 272;
+                    document.querySelector('#MobileBreakpoint').value = config.MobileBreakpoint || 768;
+                    document.querySelector('#BlurStrength').value = (config.BlurStrength ?? 18);
+                    Dashboard.hideLoadingMsg();
+                }).catch(function () { Dashboard.hideLoadingMsg(); });
+            });
+
+            document.querySelector('#ModernSidePanelConfigForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(ModernSidePanelConfig.PluginId).then(function (config) {
+                    config.EnablePlugin = document.querySelector('#EnablePlugin').checked;
+                    config.HideTopBar = document.querySelector('#HideTopBar').checked;
+                    config.PersistentSidebar = document.querySelector('#PersistentSidebar').checked;
+                    config.ShowLogo = document.querySelector('#ShowLogo').checked;
+                    config.RelocateHeaderButtons = document.querySelector('#RelocateHeaderButtons').checked;
+                    config.SidebarWidth = parseInt(document.querySelector('#SidebarWidth').value, 10) || 272;
+                    config.MobileBreakpoint = parseInt(document.querySelector('#MobileBreakpoint').value, 10) || 768;
+                    var b = parseInt(document.querySelector('#BlurStrength').value, 10);
+                    config.BlurStrength = Number.isNaN(b) ? 18 : Math.max(0, Math.min(30, b));
+                    ApiClient.updatePluginConfiguration(ModernSidePanelConfig.PluginId, config).then(function (result) {
+                        Dashboard.processPluginConfigurationUpdateResult(result);
+                    }).catch(function () { Dashboard.hideLoadingMsg(); });
+                }).catch(function () { Dashboard.hideLoadingMsg(); });
+                return false;
+            });
+        </script>
+    </div>
+</body>
+</html>
