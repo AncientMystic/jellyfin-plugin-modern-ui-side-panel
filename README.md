@@ -1,3 +1,5 @@
+## TESTING PHASE DO NOT USE THIS YET
+
 # Modern UI Side Panel — Jellyfin Plugin (v12 ready)
 
 Keeps the **modern Jellyfin UI styling** (glassmorphism, accent colors, rounded pills, CSS variables)
@@ -54,7 +56,16 @@ dotnet build -c Release
 > then reinstall the net10.0 build. Dashboard Custom CSS was removed in 10.11+ and
 > Custom Menu Links are absent in Modern mode — this plugin does not depend on either.
 
-## Install (manual)
+## Install Repo or manual
+
+repo: 
+```
+https://raw.githubusercontent.com/AncientMystic/jellyfin-plugin-modern-ui-side-panel/master/manifest.json
+```
+
+standard plugin install via repo, add repo, check for plugin on the list. 
+
+manual: 
 
 1. Copy `Jellyfin.Plugin.ModernSidePanel.dll` to your Jellyfin `plugins/ModernSidePanel/` folder:
    - Linux docker: `/config/plugins/ModernSidePanel/`
